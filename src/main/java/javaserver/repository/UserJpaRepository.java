@@ -17,5 +17,11 @@ findAll()
  */
 public interface UserJpaRepository extends JpaRepository<Login, Long> {
 	List<Login> findByUsernameLike(String username);
+//	Login findById(long id);
 	Login findByUsername(String username);
+	Login findByNickname(String nickname);
+	//對應param id
+//	@Query("from AccountInfo a where a.accountId = :id") 
+//    Login findByAccountId(@Param("id")Long accountId); 
+
 }

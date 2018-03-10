@@ -1,9 +1,12 @@
 package javaserver.security.controller;
 
+import java.io.IOException;
+
 import javaserver.model.Login;
+import javaserver.model.combine.ResultStatusModel;
 
 public interface AuthService {
-    Login register(Login userToAdd);
-    String login(String username, String password);
+	ResultStatusModel register(Login userToAdd) throws IOException;
+	ResultStatusModel login(String username, String password);
     String refresh(String oldToken);
 }

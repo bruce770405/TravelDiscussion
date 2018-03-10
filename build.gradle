@@ -6,6 +6,7 @@ buildscript {
 		sqlserverVersion = '6.1.0.jre7'
 	}
 	repositories {
+	    maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 		mavenCentral()
 	}
 	dependencies {
@@ -28,8 +29,8 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	
 }
-
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-rest')
@@ -43,6 +44,14 @@ dependencies {
     compile("io.jsonwebtoken:jjwt:${jjwtVersion}")
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.8.0'
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+   
+   //base64工具
+   compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
+   
+   // https://mvnrepository.com/artifact/com.sirika.httpclienthelpers/httpclienthelpers-core
+compile group: 'com.sirika.httpclienthelpers', name: 'httpclienthelpers-core', version: '0.5'
+
    
 }
 

@@ -3,7 +3,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javaserver.model.Webdata;
+import javaserver.model.Article;
 
 
 /*
@@ -19,9 +19,16 @@ import javaserver.model.Webdata;
 
  * 
  */
-public interface DataJpaRepository extends JpaRepository<Webdata,Long> {
+/**
+ * 
+ * @author BruceHsu
+ * article 的 dao
+ */
+public interface DataJpaRepository extends JpaRepository<Article,Long> {
 //	@Param("username")
-	Webdata findByUsername(String username);
-	List<Webdata> findByUsernameLike(String username);
+	List<Article> findByUsername(String username);
+    Article findById(long id);
+    List<Article> findByLevelId(int levelId);
+//	List<Article> findByUsernameLike(String username);
 	
 }

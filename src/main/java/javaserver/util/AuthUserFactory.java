@@ -13,10 +13,18 @@ public class AuthUserFactory {
 	private AuthUserFactory() {
 
 	}
-
+//	Long id, String username, String password,String gender, String mail,int levelId,
+//	Collection<? extends GrantedAuthority> authorities, Date lastPasswordResetDate,String stopTag) {
+//this.id = id
 	public static AuthUser create(Login l) {
-		return new AuthUser(l.getId(), l.getUsername(), l.getPassword(), l.getMail(),
-				mapToGrantedAuthorities(l.getRoles()), l.getLastPasswordResetDate());
+		return new AuthUser(l.getId(),
+				            l.getNickname(),
+				            l.getUsername(),
+				            l.getPassword(),
+				            l.getGender(),l.getMail(),
+				            l.getLevelId(),
+				            mapToGrantedAuthorities(l.getRoles()), 
+				            l.getLastPasswordResetDate(),l.getStopTag());
 	}
 
 	private static List<GrantedAuthority> mapToGrantedAuthorities(String authorities) {

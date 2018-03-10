@@ -1,7 +1,5 @@
 package javaserver.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,70 +13,118 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import javaserver.model.Webdata;
-import javaserver.repository.DataJpaRepository;
+import javaserver.controller.service.UserService;
+import javaserver.model.combine.NewArticleModel;
+import javaserver.model.combine.ResultStatusModel;
 
-/*
+/**
  * 
- * 查詢網頁資訊
+ * @author BruceHsu
+ * 
  */
-@Api("控制 USER 資訊 ")
+@Api("控制 USER 發文資訊 ")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/article")
 @PreAuthorize("hasRole('USER ')")
 public class UserController {
+
 	
 	@Autowired
-	DataJpaRepository contactsRepository;
-
-	// 新增
-		@RequestMapping(value = "/login", method = RequestMethod.POST)
-		public Webdata login(@RequestBody Webdata webdata) {
-			return this.contactsRepository.save(webdata);
-		}
-
-	// 新增
-	@RequestMapping(value = "/save/new", method = RequestMethod.POST)
-	public Webdata saveNewContact(@RequestBody Webdata webdata) {
-		return this.contactsRepository.save(webdata);
-	}
-
-	// 更新
-	@RequestMapping(value = "/save/updated", method = RequestMethod.PUT)
-	public Webdata saveUpdatedContact(@RequestBody Webdata webdata) {
-		Webdata contactUpdate = contactsRepository.findByUsername(webdata.getUsername());
-		contactUpdate.setTitle(webdata.getTitle());
-		contactUpdate.setBody(webdata.getBody());
-		return contactsRepository.save(contactUpdate);
-	}
-
-	// 刪除
-	@RequestMapping(value = "/remove", method = RequestMethod.DELETE)
-	public void removeContact(long id) {
-		this.contactsRepository.delete(id);
-	}
+	UserService service;
 	
-	@ApiOperation("傳param=發文者姓名 @return 發文資訊")
+	// 新增
+	@ApiOperation("參數:文章detail @新增文章")
 	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "username", dataType = "String",required = true, value = "發文者姓名", defaultValue = "") 
-			})
-	@ApiResponses({
+		@ApiImplicitParam(paramType = "remove", name = "id", dataType = "long", required = true, value = "發文者指定文章編號", defaultValue = ""), 
+		@ApiImplicitParam(paramType="remove", name="userName", dataType="String", required = true, value="發文者身份", defaultValue="")
+    })
+    @ApiResponses({ @ApiResponse(code = 401, message = "驗證不通過"), @ApiResponse(code = 400, message = "請求參數不正確"),
+		@ApiResponse(code = 404, message = "頁面不正確") })
+
+	@RequestMapping(value = "/post", method = RequestMethod.POST)
+	public ResultStatusModel saveNewArticle(@RequestBody NewArticleModel model) {
+		return service.saveNewArticle(model);
+	}
+
+	// 更新\
+//	@ApiOperation("參數:文章detail @更新文章")
+//	@RequestMapping(value = "/edit/{id}", method = RequestMethod.PUT)
+//	public Article saveUpdatedContact(@PathVariable("id") long id,@RequestBody Article webdata) {
+//		Article contactUpdate = contactsRepository.findById(id);
+//		contactUpdate.setTitle(webdata.getTitle());
+//		contactUpdate.setDetail(webdata.getDetail());
+//		return contactsRepository.save(contactUpdate);
+//	}
+
+	
+	
+	// 刪除
+//	@ApiOperation("參數:文章編號 @刪除使用者指定文章")
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(paramType = "remove", name = "id", dataType = "long", required = true, value = "發文者指定文章編號", defaultValue = ""), 
+//			@ApiImplicitParam(paramType="remove", name="userName", dataType="String", required = true, value="發文者身份", defaultValue="")
+//	})
+//	@ApiResponses({ @ApiResponse(code = 401, message = "驗證不通過"), @ApiResponse(code = 400, message = "請求參數不正確"),
+//			@ApiResponse(code = 404, message = "頁面不正確") })
+//	@RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+//	public void removeContact(@PathVariable("id")long id,String userName) {
+//		Article article = contactsRepository.findById(id);
+//		if(article.getUsername().equals(userName))
+//		   this.contactsRepository.delete(id);
+//	}
+
+
+//	@ApiOperation("參數:文章編號 @回傳該文章詳細內容")
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(paramType = "query", name = "username", dataType = "String", required = true, value = "發文者姓名", defaultValue = "") })
+//	@ApiResponses({ @ApiResponse(code = 401, message = "驗證不通過"), @ApiResponse(code = 400, message = "請求參數不正確"),
+//			@ApiResponse(code = 404, message = "頁面不正確") })
+//	//@PreAuthorize("hasRole('USER ')")
+//	@RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
+//	public ResultStatusModel findArticleById(@PathVariable("id")long id) {
+//		List<ArticleDetail> detail = articleDetailRepository.findById(id);
+//		return new ResultStatusModel("ok","回傳文章全部內容數目:"+detail.size(),detail);
+//	}
+
+//	@ApiOperation("參數:文章id | article @回傳回復結果")
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(paramType = "query", name = "username", dataType = "String", required = true, value = "發文者姓名", defaultValue = "") })
+//	@ApiResponses({ @ApiResponse(code = 401, message = "驗證不通過"), @ApiResponse(code = 400, message = "請求參數不正確"),
+//			@ApiResponse(code = 404, message = "頁面不正確") })
+//	//@PreAuthorize("hasRole('USER ')")
+//	@RequestMapping(value = "/reply/{id}", method = RequestMethod.POST)
+//	public ResultStatusModel replyArticle(@PathVariable("id")long id,Article inputReply) {
+//		Article article = contactsRepository.findById(id);
+//		return new ResultStatusModel("ok","回覆成功",list);
+//	}
+
+	
+//	@ApiOperation("參數:使用者名稱 @回傳該名使用者文章列表")
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(paramType = "query", name = "username", dataType = "String", required = true, value = "發文者姓名", defaultValue = "") })
+//	@ApiResponses({ @ApiResponse(code = 401, message = "驗證不通過"), @ApiResponse(code = 400, message = "請求參數不正確"),
+//			@ApiResponse(code = 404, message = "頁面不正確") })
+//	@PreAuthorize("hasRole('USER ')")
+//	@RequestMapping(value = "/query", method = RequestMethod.GET)
+//	public ResultStatusModel findArticleByName(int levelId) {
+//		return contactsRepository.findByUsername(username);
+//		return new ResultStatusModel("ok","回傳文章，筆數:"+list.size(),list);
+//	}
+
+	
+	@ApiOperation("@回傳所有文章列表")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "queryAll") })
+	@ApiResponses({ 
 		@ApiResponse(code = 401, message = "驗證不通過"),
 		@ApiResponse(code = 400, message = "請求參數不正確"),
-		@ApiResponse(code = 404, message = "頁面不正確") 
+		@ApiResponse(code = 404, message = "頁面不正確")
 		})
-	@RequestMapping(value = "/query", method = RequestMethod.GET)
-	public Webdata findContactByName(String username) {
-		Webdata contact = contactsRepository.findByUsername(username);
-		return contact;
-	}
-	
-	//查詢全部資料
-	@PreAuthorize("hasRole('USER ')")
-	@RequestMapping(value = "/queryall",method = RequestMethod.GET)
-	public List<Webdata> findContactAll(){
-		List<Webdata> list = contactsRepository.findAll();
-		return list;
+	//@PreAuthorize("hasRole('USER ')")
+	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
+	public ResultStatusModel findContactAll() {
+		
+		return service.findAllArticle();
 	}
 
 }

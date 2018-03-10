@@ -21,7 +21,7 @@ public class JwtUtil implements Serializable {
 	private static final String CLAIM_KEY_CREATED = "created";
 
 //	@Value("${jwt.secret}")
-	private String secret = "bruceandsandy";
+	private String secret = "travelD"; //token密鑰
 
 //	@Value("${jwt.expiration}")
 	private Long expiration = (long) 604800;

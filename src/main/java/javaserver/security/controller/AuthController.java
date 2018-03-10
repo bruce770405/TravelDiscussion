@@ -1,5 +1,7 @@
 package javaserver.security.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javaserver.model.Login;
+import javaserver.model.combine.ResultStatusModel;
 import javaserver.security.JwtAuthenticationRequest;
 import javaserver.security.JwtAuthenticationResponse;
 
@@ -22,14 +25,18 @@ public class AuthController {
 	@Autowired
 	private AuthService authService;
 
-	@RequestMapping(value = "/auth", method = RequestMethod.POST)
+	/**
+	 * 登入驗證
+	 * @param authRequest
+	 * @return
+	 * @throws AuthenticationException
+	 */
+	@RequestMapping(value = "auth", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authRequest) throws AuthenticationException {
-		final String token = authService.login(authRequest.getUsername(),authRequest.getPassword());
-		// Return the token
-		return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+		return ResponseEntity.ok(authService.login(authRequest.getUsername(),authRequest.getPassword()));
 	}
 
-	@RequestMapping(value = "/refresh", method = RequestMethod.GET)
+	@RequestMapping(value = "refresh", method = RequestMethod.GET)
 	public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) throws AuthenticationException {
 		String token = request.getHeader(tokenHeader);
 		String refreshedToken = authService.refresh(token);
@@ -40,8 +47,21 @@ public class AuthController {
 		}
 	}
 
-	@RequestMapping(value = "/auth/register", method = RequestMethod.POST)
-	public Login register(@RequestBody Login addedUser) throws AuthenticationException {
+	
+	/**
+	 * 註冊
+	 * @param addedUser
+	 * @return
+	 * @throws AuthenticationException
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "auth/register", method = RequestMethod.POST)
+	public ResultStatusModel register(@RequestBody Login addedUser) throws AuthenticationException, IOException {
+		
 		return authService.register(addedUser);
 	}
+	
+	
+	
+
 }

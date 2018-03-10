@@ -31,7 +31,7 @@ public class TokenFilter extends OncePerRequestFilter {
 	private String tokenHeader = "Authorization";
 
 	// @Value("${jwt.tokenHead}")
-	private String tokenHead = "auth ";
+	private String tokenHead = "";
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
