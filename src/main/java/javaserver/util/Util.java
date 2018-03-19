@@ -1,7 +1,7 @@
 package javaserver.util;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -13,11 +13,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Test;
+//import org.junit.Test;
 
 public class Util {
 
-	static String path = "/Users/BruceHsu/Desktop/作品快照/";
+	public static String path = "/Users/BruceHsu/Desktop/作品快照/";
 
 	public static String bytesToBase64(byte[] bytes) {
 		return Base64.encodeBase64String(bytes);
@@ -25,7 +25,7 @@ public class Util {
 
 	public static String imageToBase64(String username) throws IOException {
 		// nio改寫
-		String url = path + username + "/user.jpg";
+		String url = path + username +File.pathSeparator +"user.jpg";
 //		System.out.println(url);
 		FileInputStream fs = new FileInputStream(url);
 		FileChannel channel = fs.getChannel();
@@ -39,7 +39,7 @@ public class Util {
 		return base;
 	}
 
-	public static boolean base64ToImageFile(String username, String base64) throws IOException {
+	public static boolean base64ToImageFile(String username, String base64) {
 		try {
 
 			byte[] bytes = Base64.decodeBase64(base64);
@@ -48,7 +48,7 @@ public class Util {
 					bytes[i] += 256;
 				}
 			}
-			Path pathTo = Paths.get(path + username  + "/user.jpg");
+			Path pathTo = Paths.get(path + username  +File.pathSeparator+ "user.jpg");
 			WritableByteChannel channelTo = Files.newByteChannel(pathTo,
 					new OpenOption[] { StandardOpenOption.CREATE, StandardOpenOption.WRITE });
 
@@ -60,7 +60,7 @@ public class Util {
 			channelTo.close();
 
 			return true;
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return false;

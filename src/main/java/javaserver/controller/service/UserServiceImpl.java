@@ -59,8 +59,27 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public ResultStatusModel findArticleDetailById(Long id) {
-		articleDetailRepository.findById(id);
-		return null;
+		List<ArticleDetail> list = articleDetailRepository.findById(id);
+		if(list != null)
+		    return new ResultStatusModel(true,"搜尋完成，回傳資料",list);
+		else
+			return new ResultStatusModel(false,"搜尋錯誤，請檢查文章編號",null);
+	}
+
+	@Override
+	public ResultStatusModel editArticleById(long id,Article article) {
+		Article contactUpdate = contactsRepository.findById(id);
+		if(contactUpdate == null)
+			return new ResultStatusModel(false,"無指定文章編號",null);
+		contactUpdate.setTitle(article.getTitle());
+		contactUpdate.setModifyTime(new Date());
+		contactUpdate.setStopTag(article.getStopTag());
+		contactUpdate.setLevelId(article.getLevelId());
+//		contactUpdate.set
+		if(contactsRepository.save(contactUpdate) != null)
+	    return new ResultStatusModel(true,"修改完成",contactUpdate);
+		else
+			return new ResultStatusModel(false,"修改有問題，請確認",null);
 	}
 
 }

@@ -27,7 +27,11 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 	// 注入
 	@Autowired
 	private UserDetailsService userDetailsService;
-
+//	@Autowired 
+//	FalseLoginHandler authenticationFalseLoginHandler;
+	@Autowired 
+	RESTAuthenticationEntryPoint point;
+	
 	@Autowired
 	public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
@@ -45,6 +49,9 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 		httpSecurity
 				// 由於使用的是JWT，不需要csrf
 				.csrf().disable()
+				//處理401,403 exception
+				.exceptionHandling().authenticationEntryPoint(point)
+				.and()
 				// 基於token，所以不需要session
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests()
@@ -52,15 +59,24 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 				// 允許於web靜態資源的無授權訪問
 				.antMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js")
 				.permitAll()
+				//排除swagger需要安全驗證的問題
+				.antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**")
+				.permitAll()
 				// token的rest api要允許進入
 				.antMatchers("/auth/**").permitAll()
 				// 除上面外的所有請求全部需要認證
-				.anyRequest().authenticated();
+				.anyRequest().authenticated()
+				.and()
+				// 禁cache
+				.headers().cacheControl()
+				//登入
+//				.and()
+//				.formLogin().failureHandler(authenticationFalseLoginHandler)
+				;
 
-		// 禁cache
-		httpSecurity.headers().cacheControl();
+		//
 		httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-		
+    
 	}
 
 	
@@ -70,6 +86,9 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         return new TokenFilter();
     }
 
+	
+	
+	
 
 
 }

@@ -1,30 +1,32 @@
 package javaserver.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
+
 
 @Entity
-public class ArticleDetail {
+@Table(name= "Article_Detail")
+@IdClass(ArticleMultiKeys.class)
+public class ArticleDetail  implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4094158907079951050L;
 	@Id
 	private Long id;
-//	@Id
+	@Id
 	private String username;
-//	@Id
+	@Id
 	private Date createTime;
-	private String detailContext, stopTag;
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	private Date modifyTime;
+	private String detailContext, stopTag;
+
 
 	public ArticleDetail() {
 		super();
@@ -42,7 +44,14 @@ public class ArticleDetail {
 	}
 
 
+	public Long getId() {
+		return id;
+	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public String getUsername() {
 		return username;
 	}

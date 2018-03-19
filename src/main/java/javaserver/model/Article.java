@@ -8,6 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * 
+ * @author BruceHsu
+ *  article 的pojo
+ */
 @Entity
 //@Table(name="Article")
 public class Article {
@@ -18,6 +23,7 @@ public class Article {
     private int levelId;
     private Date modifyTime,createTime;
     
+//   List<ArticleDetail> detailList;
     public Article() {
         super();
     }

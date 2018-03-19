@@ -30,5 +30,6 @@ public interface DataJpaRepository extends JpaRepository<Article,Long> {
     Article findById(long id);
     List<Article> findByLevelId(int levelId);
 //	List<Article> findByUsernameLike(String username);
-	
+    @SuppressWarnings("unchecked")
+	Article save(Article article);
 }
