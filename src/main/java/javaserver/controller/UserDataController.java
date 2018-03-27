@@ -1,5 +1,6 @@
 package javaserver.controller;
 
+import java.io.File;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ public class UserDataController {
 
 	@Autowired
 	public UserDataController(ResourceLoader resourceLoader) {
-		
 		this.resourceLoader = resourceLoader;
 	}
 
@@ -52,7 +52,7 @@ public class UserDataController {
 	@RequestMapping(value = "/getIcon/{username}", method = RequestMethod.GET)
 	@ResponseBody  
 	public ResponseEntity<?> getUserIcon(@PathVariable("username") String username) {
-		String fileUrl = Util.path+username+"\\";
+		String fileUrl = String.format("%s%s%s", Util.path , username , File.separator);
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.IMAGE_JPEG); 
 		try {

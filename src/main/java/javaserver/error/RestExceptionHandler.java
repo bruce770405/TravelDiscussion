@@ -1,8 +1,5 @@
 package javaserver.error;
 
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +19,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        return new ResponseEntity<Object>(new ResultStatusModel(false, "錯誤的操作", body), status);
+        return new ResponseEntity<>(new ResultStatusModel(false, "錯誤的操作", body), status);
 
     }
 }

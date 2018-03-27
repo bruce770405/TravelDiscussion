@@ -7,7 +7,7 @@ public class LoginUserModel {
 
 	public LoginUserModel(Login login, JwtAuthenticationResponse jwt) {
 		this.login = login;
-		this.jwt = jwt;
+		this.token = jwt.getToken();
 	}
 
 	public Login getLogin() {
@@ -18,18 +18,18 @@ public class LoginUserModel {
 		this.login = login;
 	}
 
-	public JwtAuthenticationResponse getJwt() {
-		return jwt;
-	}
 
-	public void setJwt(JwtAuthenticationResponse jwt) {
-		this.jwt = jwt;
+
+	public String getToken() {
+		return token;
 	}
+	
+	
 
 	/**
 	 * 
 	 */
 //	private static final long serialVersionUID = 8771816812204012352L;
 	private Login login;
-	private JwtAuthenticationResponse jwt;
+	private final String token;
 }

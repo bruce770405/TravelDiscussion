@@ -2,6 +2,7 @@ package javaserver.model.combine;
 
 //@Entity
 public class ResultStatusModel {
+	
 	private boolean resultStatus;
 	private String message;
 	private Object model;

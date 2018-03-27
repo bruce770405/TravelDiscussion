@@ -17,7 +17,7 @@ import org.apache.commons.codec.binary.Base64;
 
 public class Util {
 
-	public static String path = "/Users/BruceHsu/Desktop/作品快照/";
+	public static String path = "/Users/BruceHsu/Desktop/作品快照"+File.separator;
 
 	public static String bytesToBase64(byte[] bytes) {
 		return Base64.encodeBase64String(bytes);
@@ -25,7 +25,7 @@ public class Util {
 
 	public static String imageToBase64(String username) throws IOException {
 		// nio改寫
-		String url = path + username +File.pathSeparator +"user.jpg";
+		String url = path + username +File.separator +"user.jpg";
 //		System.out.println(url);
 		FileInputStream fs = new FileInputStream(url);
 		FileChannel channel = fs.getChannel();
@@ -48,13 +48,13 @@ public class Util {
 					bytes[i] += 256;
 				}
 			}
-			Path pathTo = Paths.get(path + username  +File.pathSeparator+ "user.jpg");
+			Path pathTo = Paths.get(path + username  +File.separator+ "user.jpg");
 			WritableByteChannel channelTo = Files.newByteChannel(pathTo,
 					new OpenOption[] { StandardOpenOption.CREATE, StandardOpenOption.WRITE });
 
 			ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
 			buffer.put(bytes);
-			buffer.flip();
+//			buffer.flip();
 			channelTo.write(buffer);
 			buffer.flip();
 			channelTo.close();

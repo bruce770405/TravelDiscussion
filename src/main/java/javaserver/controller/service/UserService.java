@@ -1,14 +1,18 @@
 package javaserver.controller.service;
 
+import org.springframework.http.ResponseEntity;
+
 import javaserver.model.Article;
 import javaserver.model.combine.NewArticleModel;
-import javaserver.model.combine.ResultStatusModel;
 
 public interface UserService {
 
-	ResultStatusModel saveNewArticle(NewArticleModel model);
-	ResultStatusModel findArticlesByLevel(int levelId);
-	ResultStatusModel findAllArticle();
-	ResultStatusModel findArticleDetailById(Long id);
-	ResultStatusModel editArticleById(long id,Article article);
+	ResponseEntity<?> saveNewArticle(NewArticleModel model);
+	ResponseEntity<?> deleteArticleStepDetail(Long id,Long stepId,String username);
+	ResponseEntity<?> deleteArticle(Long id);
+	
+	ResponseEntity<?> findArticlesByLevel(int levelId);
+	ResponseEntity<?> findAllArticle();
+	ResponseEntity<?> findArticleDetailById(Long id);
+	ResponseEntity<?> editArticleById(long id,Article article);
 }

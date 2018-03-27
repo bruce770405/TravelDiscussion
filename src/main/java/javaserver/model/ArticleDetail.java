@@ -21,8 +21,8 @@ public class ArticleDetail  implements Serializable{
 	@Id
 	private Long id;
 	@Id
+	private Long stepId;
 	private String username;
-	@Id
 	private Date createTime;
 	private Date modifyTime;
 	private String detailContext, stopTag;
@@ -32,10 +32,11 @@ public class ArticleDetail  implements Serializable{
 		super();
 	}
 	
-	public ArticleDetail(Long id, String username, String detailContext, String stopTag, Date createTime,
+	public ArticleDetail(Long id,Long stepId, String username, String detailContext, String stopTag, Date createTime,
 			Date modifyTime) {
 		super();
 		this.id = id;
+		this.stepId = stepId;
 		this.username = username;
 		this.detailContext = detailContext;
 		this.stopTag = stopTag;
@@ -94,6 +95,14 @@ public class ArticleDetail  implements Serializable{
 
 	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+
+	public Long getStepId() {
+		return stepId;
+	}
+
+	public void setStepId(Long stepId) {
+		this.stepId = stepId;
 	}
 
 	

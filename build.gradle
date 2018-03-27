@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 group = 'com.bruce.javaserver'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -50,9 +50,15 @@ dependencies {
    compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
    
    // https://mvnrepository.com/artifact/com.sirika.httpclienthelpers/httpclienthelpers-core
-compile group: 'com.sirika.httpclienthelpers', name: 'httpclienthelpers-core', version: '0.5'
+   compile group: 'com.sirika.httpclienthelpers', name: 'httpclienthelpers-core', version: '0.5'
 
    
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'javaserver.JavaServerApplication'
+    }
 }
 
 

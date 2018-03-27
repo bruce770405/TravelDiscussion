@@ -1,15 +1,13 @@
 package javaserver.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 
  * @author BruceHsu
  * 
  * @Param Id
- * @Param username
- * @Param createTime 
+ * @Param stepId
  * 
  * 多key連結
  */
@@ -21,17 +19,15 @@ public class ArticleMultiKeys implements Serializable {
 	private static final long serialVersionUID = 7075314889231294987L;
 
 	private Long id;
-	private String username;
-	private Date createTime;
+	private Long stepId;
 
 	public ArticleMultiKeys() {
 		super();
 	}
 
-	public ArticleMultiKeys(Long id, String username, Date createTime) {
+	public ArticleMultiKeys(Long id, Long stepId) {
 		this.id = id;
-		this.username = username;
-		this.createTime = createTime;
+        this.stepId = stepId;
 	}
 
 	public Long getId() {
@@ -42,20 +38,12 @@ public class ArticleMultiKeys implements Serializable {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public Long getStepId() {
+		return stepId;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setStepId(Long stepId) {
+		this.stepId = stepId;
 	}
 
 	@Override
@@ -63,8 +51,7 @@ public class ArticleMultiKeys implements Serializable {
 		final int PRIME = 31;
 		int result = 1;
 		result = PRIME * result + ((id == null) ? 0 : id.hashCode());
-		result = PRIME * result + ((username == null) ? 0 : username.hashCode());
-		result = PRIME * result + ((createTime == null) ? 0 : createTime.hashCode());
+		result = PRIME * result + ((stepId == null) ? 0 : stepId.hashCode());
 		return result;
 	}
 
@@ -88,21 +75,14 @@ public class ArticleMultiKeys implements Serializable {
 		} else if (!id.equals(other.id)) {
 			return false;
 		}
-		if (username == null) {
-			if (other.username != null) {
+		if (stepId == null) {
+			if (other.stepId != null) {
 				return false;
 			}
-		} else if (!username.equals(other.username)) {
+		} else if (!stepId.equals(other.stepId)) {
 			return false;
 		}
-		if (createTime == null) {
-			if (other.createTime != null) {
-				return false;
-			}
-		} else if (!createTime.equals(other.createTime)) {
-			return false;
-		}
-
+		
 		return true;
 	}
 }

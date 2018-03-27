@@ -1,6 +1,7 @@
 package javaserver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,6 @@ import io.swagger.annotations.ApiResponses;
 import javaserver.controller.service.UserService;
 import javaserver.model.Article;
 import javaserver.model.combine.NewArticleModel;
-import javaserver.model.combine.ResultStatusModel;
 
 /**
  * 
@@ -32,9 +32,13 @@ import javaserver.model.combine.ResultStatusModel;
 public class ArticleController {
 
 	
-	@Autowired
-	UserService service;
 	
+	private UserService service;
+	
+	@Autowired
+	public ArticleController(UserService service) {
+		this.service = service;
+	}
 	
 	@ApiOperation("新增一篇文章")
 //	@ApiImplicitParams({
@@ -49,7 +53,7 @@ public class ArticleController {
 		@ApiResponse(code = 404, message = "頁面不正確") 
     	    })
 	@RequestMapping(value = "/post", method = RequestMethod.POST)
-	public ResultStatusModel saveNewArticle(@RequestBody NewArticleModel model) {
+	public ResponseEntity<?> saveNewArticle(@RequestBody NewArticleModel model) {
 		return service.saveNewArticle(model);
 	}
 
@@ -64,29 +68,29 @@ public class ArticleController {
 		 @ApiResponse(code = 404, message = "頁面不正確") 
 		 })		
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.PUT)
-	public ResultStatusModel saveUpdatedContact(@PathVariable("id") long id,@RequestBody Article webdata) {
+	public ResponseEntity<?> saveUpdatedContact(@PathVariable("id") long id,@RequestBody Article webdata) {
 		return service.editArticleById(id,webdata);
 	}
 
 	
 	
 	// 刪除
-//	@ApiOperation("刪除指定文章")
-//	@ApiImplicitParams({
-//			@ApiImplicitParam(paramType = "remove", name = "id", dataType = "long", required = true, value = "發文者指定文章編號", defaultValue = ""), 
-//			@ApiImplicitParam(paramType="remove", name="userName", dataType="String", required = true, value="發文者身份", defaultValue="")
-//	})
-//	@ApiResponses({ 
-//		@ApiResponse(code = 401, message = "驗證不通過"), 
-//		@ApiResponse(code = 400, message = "請求參數不正確"),
-//		@ApiResponse(code = 404, message = "頁面不正確") 
-//		})
-//	@RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
-//	public void removeContact(@PathVariable("id")long id,String userName) {
-//		Article article = contactsRepository.findById(id);
-//		if(article.getUsername().equals(userName))
-//		   this.contactsRepository.delete(id);
-//	}
+	@ApiOperation("刪除指定文章內的回文")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "remove", name = "id", dataType = "long", required = true, value = "指定文章編號", defaultValue = ""),
+			@ApiImplicitParam(paramType = "remove", name = "stepId", dataType = "long", required = true, value = "文章內文編號", defaultValue = ""),
+			@ApiImplicitParam(paramType="remove", name="username", dataType="String", required = true, value="請求者帳號名稱", defaultValue="")
+	})
+	@ApiResponses({ 
+		@ApiResponse(code = 401, message = "驗證不通過"), 
+		@ApiResponse(code = 400, message = "請求參數不正確"),
+		@ApiResponse(code = 404, message = "頁面不正確") 
+		})
+	@RequestMapping(value = "/remove/{id}/{stepId}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> removeContact(@PathVariable("id")long id,@PathVariable long stepId,String username) {
+
+		return service.deleteArticleStepDetail(id,stepId,username);
+	}
 
 
 	@ApiOperation("回傳該文章詳細內容")
@@ -98,7 +102,7 @@ public class ArticleController {
 			@ApiResponse(code = 404, message = "頁面不正確") 
 		})
 	@RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
-	public ResultStatusModel findArticleById(@PathVariable("id")long id) {
+	public ResponseEntity<?> findArticleById(@PathVariable("id")long id) {
 		return service.findArticleDetailById(id);
 	}
 
@@ -137,7 +141,7 @@ public class ArticleController {
 		@ApiResponse(code = 404, message = "頁面不正確")
 		})
 	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
-	public ResultStatusModel findContactAll() {
+	public ResponseEntity<?> findContactAll() {
 		
 		return service.findAllArticle();
 	}
