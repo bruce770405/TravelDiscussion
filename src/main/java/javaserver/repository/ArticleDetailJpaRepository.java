@@ -1,21 +1,18 @@
 package javaserver.repository;
 
+import javaserver.entity.ArticleDetailEntity;
+import javaserver.entity.key.ArticleMultiKey;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+@Repository
+public interface ArticleDetailJpaRepository extends JpaRepository<ArticleDetailEntity, ArticleMultiKey> {
 
-import javaserver.model.ArticleDetail;
+    List<ArticleDetailEntity> findAllById(Long id);
 
+    ArticleDetailEntity findByIdAndStepId(Long id, Long stepId);
 
-/**
- * 
- * @author BruceHsu
- *
- * 控制文章詳細內容
- */
-public interface ArticleDetailJpaRepository extends JpaRepository<ArticleDetail,Long>{
-
-	List<ArticleDetail> findById(long id);
-	ArticleDetail findByIdAndStepId(long id,long stepId);
-	int deleteByIdAndStepId(long id,long stepId);
+    int deleteByIdAndStepId(Long id, Long stepId);
 }

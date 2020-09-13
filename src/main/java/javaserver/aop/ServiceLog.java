@@ -1,11 +1,17 @@
 package javaserver.aop;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -24,6 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 @Aspect
+@Component
 public class ServiceLog {
 
 	private Logger log = Logger.getLogger(this.getClass());
@@ -33,9 +40,16 @@ public class ServiceLog {
 	public void service() {
 	}
 	
+	@Before("service()")  //before(pointcut)
+	public void beforeExecute(JoinPoint joinPoint){
+        String classname = joinPoint.getTarget().getClass().getSimpleName();
+        String methodName = joinPoint.getSignature().getName();
+        List<Object> args = Arrays.asList(joinPoint.getArgs());
+        log.info("before Execute! --class name: " + classname + ", method name: " + methodName + " " + args );
+    }
+	
 	@After("service()")
 	public void callServiceLog() {
-		
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
 		log.info("URL : " + request.getRequestURL().toString());

@@ -1,13 +1,15 @@
 package javaserver.security.controller;
 
-import java.io.IOException;
-
+import javaserver.entity.LoginEntity;
+import javaserver.security.JwtAuthenticationResponse;
 import org.springframework.http.ResponseEntity;
 
-import javaserver.model.Login;
+import java.io.IOException;
 
 public interface AuthService {
-	ResponseEntity<?> register(Login userToAdd) throws IOException;
-	ResponseEntity<?> login(String username, String password);
-	ResponseEntity<?> refresh(String oldToken);
+    ResponseEntity<?> register(LoginEntity userToAdd) throws IOException;
+
+    JwtAuthenticationResponse login(String username, String password);
+
+    ResponseEntity<?> refresh(String oldToken);
 }

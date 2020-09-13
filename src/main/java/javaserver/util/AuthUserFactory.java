@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javaserver.model.Login;
+import javaserver.entity.LoginData;
 import javaserver.security.AuthUser;
 
 public class AuthUserFactory {
@@ -16,7 +16,7 @@ public class AuthUserFactory {
 //	Long id, String username, String password,String gender, String mail,int levelId,
 //	Collection<? extends GrantedAuthority> authorities, Date lastPasswordResetDate,String stopTag) {
 //this.id = id
-	public static AuthUser create(Login l) {
+	public static AuthUser create(LoginData l) {
 		return new AuthUser(l.getId(),
 				            l.getNickname(),
 				            l.getUsername(),

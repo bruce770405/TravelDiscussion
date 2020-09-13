@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javaserver.model.Login;
+import javaserver.entity.LoginData;
 import javaserver.security.JwtAuthenticationRequest;
 
 @RestController
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AuthController {
 	
 	 @Value("${jwt.header}")
@@ -51,7 +54,7 @@ public class AuthController {
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "auth/register", method = RequestMethod.POST)
-	public ResponseEntity<?> register(@RequestBody Login addedUser) throws AuthenticationException, IOException {
+	public ResponseEntity<?> register(@RequestBody LoginData addedUser) throws AuthenticationException, IOException {
 		return authService.register(addedUser);
 	}
 	

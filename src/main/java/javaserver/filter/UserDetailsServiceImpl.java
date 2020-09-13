@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javaserver.model.Login;
+import javaserver.entity.LoginData;
 import javaserver.repository.UserJpaRepository;
 import javaserver.util.AuthUserFactory;
 
@@ -18,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Login login = repository.findByUsername(username);
+		LoginData login = repository.findByUsername(username);
 		if(login != null) {
 			login.setUsername(login.getUsername().trim());
 			return AuthUserFactory.create(login);	

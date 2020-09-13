@@ -1,20 +1,20 @@
 package javaserver.model.combine;
 
-import javaserver.model.Login;
+import javaserver.entity.LoginData;
 import javaserver.security.JwtAuthenticationResponse;
 
 public class LoginUserModel {
 
-	public LoginUserModel(Login login, JwtAuthenticationResponse jwt) {
+	public LoginUserModel(LoginData login, JwtAuthenticationResponse jwt) {
 		this.login = login;
 		this.token = jwt.getToken();
 	}
 
-	public Login getLogin() {
+	public LoginData getLogin() {
 		return login;
 	}
 
-	public void setLogin(Login login) {
+	public void setLogin(LoginData login) {
 		this.login = login;
 	}
 
@@ -30,6 +30,6 @@ public class LoginUserModel {
 	 * 
 	 */
 //	private static final long serialVersionUID = 8771816812204012352L;
-	private Login login;
+	private LoginData login;
 	private final String token;
 }

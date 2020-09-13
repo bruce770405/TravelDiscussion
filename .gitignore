@@ -1,0 +1,10 @@
+TravelDiscussion.iml
+.idea/.gitignore
+.idea/compiler.xml
+.idea/gradle.xml
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.settings/org.springframework.ide.eclipse.prefs
+.settings/gradle/org.springsource.ide.eclipse.gradle.core.prefs

@@ -26,9 +26,9 @@ public class SwaggerWebMvcConfig {
 
 	
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("TravelDisscussion")
+		return new ApiInfoBuilder().title("TravelDiscussion")
 				.description("文章管理後台")
-				.termsOfServiceUrl("http://")
+				.termsOfServiceUrl("http://localhost")
 				.version("1.0")
 				.build();
 	}

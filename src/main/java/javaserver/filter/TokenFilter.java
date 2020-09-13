@@ -22,42 +22,42 @@ import javaserver.util.JwtUtil;
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-	 @Autowired
-	private JwtUtil util;
+    @Autowired
+    private JwtUtil util;
 
-	 @Value("${jwt.header}")
-	private String tokenHeader;
+    @Value("${jwt.header}")
+    private String tokenHeader;
 
-	 @Value("${jwt.tokenHead}")
-	private String tokenHead;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {
-		String authHeader = request.getHeader(this.tokenHeader);
-		if (authHeader != null && authHeader.startsWith(tokenHead)) {
-			final String authToken = authHeader.substring(tokenHead.length()); // The part after "auth "
-			String username = util.getUsernameFromToken(authToken);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        String authHeader = request.getHeader(this.tokenHeader);
+        if (authHeader != null && authHeader.startsWith(tokenHead)) {
+            final String authToken = authHeader.substring(tokenHead.length()); // The part after "auth "
+            String username = util.getUsernameFromToken(authToken);
 
-			logger.info("checking authentication " + username);
+            logger.info("checking authentication " + username);
 
-			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 //
-				UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 //
-				if (util.validateToken(authToken, userDetails)) {
-					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-							userDetails, null, userDetails.getAuthorities());
-					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					logger.info("authenticated user " + username + ", setting security context");
-					SecurityContextHolder.getContext().setAuthentication(authentication);
-				}
-			}
-		}
+                if (util.validateToken(authToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    logger.info("authenticated user " + username + ", setting security context");
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
+        }
 
-		chain.doFilter(request, response);
-	}
+        chain.doFilter(request, response);
+    }
 }
