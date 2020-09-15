@@ -1,6 +1,7 @@
 package javaserver.filter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -38,11 +39,11 @@ public class TokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);
-        if (authHeader != null && authHeader.startsWith(tokenHead)) {
+        if (!Objects.isNull(authHeader) && authHeader.startsWith(tokenHead)) {
             final String authToken = authHeader.substring(tokenHead.length()); // The part after "auth "
-            String username = util.getUsernameFromToken(authToken);
+            final String username = util.getUsernameFromToken(authToken);
 
-            logger.info("checking authentication " + username);
+            logger.info("checking authentication {}" + username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 //

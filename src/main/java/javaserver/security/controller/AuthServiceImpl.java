@@ -7,10 +7,8 @@ import javaserver.repository.UserJpaRepository;
 import javaserver.security.AuthUser;
 import javaserver.security.JwtAuthenticationResponse;
 import javaserver.util.JwtUtil;
-import javaserver.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
      */
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
-    private final JwtUtil util;
+    private final JwtUtil jwtUtil;
     private final UserJpaRepository userRepository;
     // 密碼加密工具
     private final static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -46,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
                            JwtUtil util, UserJpaRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
-        this.util = util;
+        this.jwtUtil = util;
         this.userRepository = userRepository;
     }
 
@@ -60,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RestfulException(AuthErrorCode.ACCOUNT_HAS_EXISTED);
         }
 
-        userToAdd = AddUserHandler(userToAdd);
+        userToAdd = prepareRegisterUser(userToAdd);
         LoginEntity returnLogin = userRepository.save(userToAdd);
         returnLogin.setPassword(null);
         return ResponseEntity.ok(returnLogin);
@@ -75,32 +73,32 @@ public class AuthServiceImpl implements AuthService {
 
         // Reload password post-security so we can generate token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = util.generateToken(userDetails);
+        final String token = jwtUtil.generateToken(userDetails);
         return new JwtAuthenticationResponse(token);
     }
 
     @Override
     public ResponseEntity<?> refresh(String oldToken) {
         final String token = oldToken.substring(tokenHead.length());
-        String username = util.getUsernameFromToken(token);
+        final String username = jwtUtil.getUsernameFromToken(token);
         AuthUser user = (AuthUser) userDetailsService.loadUserByUsername(username);
-        if (util.canTokenBeRefreshed(token, user.getLastPasswordResetDate()))
-            return new ResponseEntity<>(util.refreshToken(token), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        if (!jwtUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(jwtUtil.refreshToken(token));
     }
 
-    private LoginEntity AddUserHandler(LoginEntity userToAdd) {
+    private LoginEntity prepareRegisterUser(LoginEntity userToAdd) {
         final String rawPassword = userToAdd.getPassword();
         userToAdd.setPassword(encoder.encode(rawPassword));
         userToAdd.setLastPasswordResetDate(new Date());
         userToAdd.setRoles("ROLE_USER");
         userToAdd.setStopTag((short) 0);
         userToAdd.setLevelId(1);
-        if (userToAdd.getIcon() == null)
-            userToAdd.setIcon("");
-        else
-            Util.base64ToImageFile(userToAdd.getUsername(), userToAdd.getIcon());
+        if (!Objects.isNull(userToAdd.getIcon())) {
+//            jwtUtil.base64ToImageFile(userToAdd.getUsername(), userToAdd.getIcon());
+        }
         return userToAdd;
     }
 
