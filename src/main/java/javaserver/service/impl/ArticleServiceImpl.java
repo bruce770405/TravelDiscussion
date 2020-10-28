@@ -5,9 +5,9 @@ import javaserver.entity.ArticleEntity;
 import javaserver.entity.LoginEntity;
 import javaserver.error.RestfulException;
 import javaserver.error.errorcode.ArticleErrorCode;
-import javaserver.repository.ArticleDetailJpaRepository;
-import javaserver.repository.ArticleJpaRepository;
-import javaserver.repository.UserJpaRepository;
+import javaserver.repository.ArticleDetailRepository;
+import javaserver.repository.ArticleRepository;
+import javaserver.repository.UserRepository;
 import javaserver.service.ArticleBo;
 import javaserver.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,13 @@ import java.util.Objects;
 @Service(value = "ArticleService")
 public class ArticleServiceImpl implements ArticleService {
 
-    private final ArticleJpaRepository articleRepository;
-    private final ArticleDetailJpaRepository articleDetailRepository;
-    private final UserJpaRepository userRepository;
+    private final ArticleRepository articleRepository;
+    private final ArticleDetailRepository articleDetailRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ArticleServiceImpl(ArticleJpaRepository article, ArticleDetailJpaRepository articleDetail,
-                              UserJpaRepository user) {
+    public ArticleServiceImpl(ArticleRepository article, ArticleDetailRepository articleDetail,
+                              UserRepository user) {
         this.articleDetailRepository = articleDetail;
         this.articleRepository = article;
         this.userRepository = user;

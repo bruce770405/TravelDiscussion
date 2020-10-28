@@ -1,14 +1,8 @@
 package javaserver.filter;
 
-import java.io.IOException;
-import java.util.Objects;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import javaserver.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +12,18 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javaserver.util.JwtUtil;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
     @Autowired
+    @Qualifier("UserDetailsServiceImpl")
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -43,12 +43,12 @@ public class TokenFilter extends OncePerRequestFilter {
             final String authToken = authHeader.substring(tokenHead.length()); // The part after "auth "
             final String username = util.getUsernameFromToken(authToken);
 
-            logger.info("checking authentication {}" + username);
+            logger.info("checking authentication { " + username + " }");
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 //
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-//
+//                AuthorityUtils.commaSeparatedStringToAuthorityList()
                 if (util.validateToken(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());

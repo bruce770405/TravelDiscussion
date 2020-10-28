@@ -1,6 +1,12 @@
 package javaserver.util;
 
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,11 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.FastDateFormat;
 
 /**
  * 檔案處理工具集.
@@ -23,6 +24,7 @@ import org.apache.commons.lang.time.FastDateFormat;
  * <li>write file to byte array</li>
  * </ul>
  * </p>
+ *
  * @author BruceHsu
  * @version 1.0, 2018/05/27
  * @see {@link org.apache.commons.io.FileUtils}
@@ -30,14 +32,14 @@ import org.apache.commons.lang.time.FastDateFormat;
  */
 public class FileUtilsEx extends FileUtils {
 
-   
+    private final static Logger LOGGER = Logger.getLogger(FileUtilsEx.class);
+
     /**
      * Read file to byte array.
-     * @param file
-     *            the file.
+     *
+     * @param file the file.
      * @return the byte[]
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static byte[] readFileToByteArray(File file) throws IOException {
 
@@ -52,11 +54,10 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * Read file to byte array.
-     * @param sFileName
-     *            the s file name.
+     *
+     * @param sFileName the s file name.
      * @return the byte[]
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static byte[] readFileToByteArray(String sFileName) throws IOException {
 
@@ -75,8 +76,8 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * Read file to byte array quietly.
-     * @param sFileName
-     *            the s file name.
+     *
+     * @param sFileName the s file name.
      * @return the byte[]
      */
     public static byte[] readFileToByteArrayQuietly(String sFileName) {
@@ -103,20 +104,18 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * Read file to string.
-     * @param sFileName
-     *            the s file name.
-     * @param sEncoding
-     *            the s encoding.
+     *
+     * @param sFileName the s file name.
+     * @param sEncoding the s encoding.
      * @return the String
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static String readFileToString(String sFileName, String sEncoding) throws IOException {
         if (StringUtils.isBlank(sFileName)) {
             return null;
         }
 
-        String sData = null;
+        String sData;
 
         File file = new File(sFileName);
 
@@ -127,10 +126,9 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * Read file to string quietly.
-     * @param sFileName
-     *            the s file name.
-     * @param sEncoding
-     *            the s encoding.
+     *
+     * @param sFileName the s file name.
+     * @param sEncoding the s encoding.
      * @return the String
      */
     public static String readFileToStringQuietly(String sFileName, String sEncoding) {
@@ -154,39 +152,15 @@ public class FileUtilsEx extends FileUtils {
         return sData;
     }
 
-    // /**
-    // * <p>
-    // * Writes data to a file. The file will be created if it does not exist.
-    // * </p>
-    // * @param file
-    // * the file to write.
-    // * @param data
-    // * The content to write to the file.
-    // * @throws IOException
-    // * in case of an I/O error.
-    // */
-    // public static void writeByteArrayToFile(File file, byte[] data) throws
-    // IOException {
-    // OutputStream out = new java.io.FileOutputStream(file);
-    // try {
-    // out.write(data);
-    // } finally {
-    // IOUtils.closeQuietly(out);
-    // }
-    // }
-
     /**
      * <p>
      * Writes data to a file. The file will be created if it does not exist.
      * </p>
-     * @param sFileName
-     *            the file name to write.
-     * @param sData
-     *            the content to write to the file name.
-     * @param sEncoding
-     *            encoding to use.
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     *
+     * @param sFileName the file name to write.
+     * @param sData     the content to write to the file name.
+     * @param sEncoding encoding to use.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static void writeStringToFile(String sFileName, String sData, String sEncoding) throws IOException {
 
@@ -208,10 +182,9 @@ public class FileUtilsEx extends FileUtils {
      * <p>
      * Writes data to a file. The file will be created if it does not exist.
      * </p>
-     * @param sFileName
-     *            the file name to write.
-     * @param data
-     *            the content to write to the file name.
+     *
+     * @param sFileName the file name to write.
+     * @param data      the content to write to the file name.
      */
     public static void writeByteArrayToFileQuietly(String sFileName, byte[] data) {
 
@@ -230,12 +203,10 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * Write byte array to file.
-     * @param sFileName
-     *            the s file name.
-     * @param data
-     *            the data.
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     *
+     * @param sFileName the s file name.
+     * @param data      the data.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static void writeByteArrayToFile(String sFileName, byte[] data) throws IOException {
 
@@ -251,10 +222,9 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * Copies a file to a directory preserving the file date. <br>
-     * @param srcFile
-     *            an existing file to copy, must not be null.
-     * @param destDir
-     *            the directory to place the copy in, must not be null.
+     *
+     * @param srcFile an existing file to copy, must not be null.
+     * @param destDir the directory to place the copy in, must not be null.
      */
     public static void copyFileToDirectoryQuietly(File srcFile, File destDir) {
 
@@ -269,10 +239,9 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * List file names by dir path name.
-     * @param filePath
-     *            file dir.
-     * @param recursive
-     *            list dir recursively.
+     *
+     * @param filePath  file dir.
+     * @param recursive list dir recursively.
      * @return List<String>
      */
     public static List<String> listFileNamesQuietly(String filePath, boolean recursive) {
@@ -291,18 +260,17 @@ public class FileUtilsEx extends FileUtils {
             }
 
         } catch (Exception e) {
-        	e.printStackTrace();
-//            logger.error(e);
+            e.printStackTrace();
+            LOGGER.error("listFileNamesQuietly fail", e);
         }
         return fileNames;
     }
 
     /**
      * Force mkdir.
-     * @param dirName
-     *            the dir name.
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     *
+     * @param dirName the dir name.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static void forceMkdir(String dirName) throws IOException {
         if (StringUtils.isBlank(dirName)) {
@@ -322,10 +290,9 @@ public class FileUtilsEx extends FileUtils {
      * <pre>
      * backup("e:/tmp/a.txt", "e:/tmp/backup") => e:/tmp/backup/yyyyMMdd/a.txt.HHmmss
      * </pre>
-     * @param srcFileName
-     *            the src file name.
-     * @param backupPath
-     *            the backup path.
+     *
+     * @param srcFileName the src file name.
+     * @param backupPath  the backup path.
      */
     public static void backup(String srcFileName, String backupPath) {
 
@@ -345,10 +312,9 @@ public class FileUtilsEx extends FileUtils {
      * <pre>
      * backup("e:/tmp/a.txt", "e:/tmp/backup") => e:/tmp/backup/yyyyMMdd/a.txt.HHmmss
      * </pre>
-     * @param srcFile
-     *            the src file.
-     * @param backupPath
-     *            the backup path.
+     *
+     * @param srcFile    the src file.
+     * @param backupPath the backup path.
      */
     public static void backup(File srcFile, String backupPath) {
 
@@ -357,7 +323,7 @@ public class FileUtilsEx extends FileUtils {
         }
 
         if (!srcFile.exists()) {
-            logger.warn("no source file = " + srcFile.getName());
+            LOGGER.warn("no source file = " + srcFile.getName());
             return;
         }
 
@@ -373,21 +339,18 @@ public class FileUtilsEx extends FileUtils {
             backupFile(backupDir, srcFile, ext);
 
         } catch (IOException e) {
-            logger.error("cannot backup file name = " + srcFile.getName(), e);
+            LOGGER.error("cannot backup file name = " + srcFile.getName(), e);
         }
 
     }
 
     /**
      * Backup File.
-     * @param backupDir
-     *            the backup dir.
-     * @param srcFile
-     *            the src file.
-     * @param ext
-     *            the ext.
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     *
+     * @param backupDir the backup dir.
+     * @param srcFile   the src file.
+     * @param ext       the ext.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private static void backupFile(File backupDir, File srcFile, String ext) throws IOException {
 
@@ -403,14 +366,14 @@ public class FileUtilsEx extends FileUtils {
 
         String backupPath = FileNameUtilsEx.normalizeDir(backupDir.getPath());
 
-        StringBuffer backupFileName = new StringBuffer();
+        StringBuilder backupFileName = new StringBuilder();
 
         backupFileName.append(backupPath);
         backupFileName.append(srcFile.getName());
         backupFileName.append(".");
         backupFileName.append(ext);
 
-        logger.info("backup file name = " + backupFileName);
+        LOGGER.info("backup file name = " + backupFileName);
 
         // Target File
         File backupFile = new File(backupFileName.toString());
@@ -424,14 +387,13 @@ public class FileUtilsEx extends FileUtils {
     /**
      * 產生備份目錄.
      * <pre>
-     * 
+     *
      * <$BAKDIR>\YYYYMMDD\
      * </pre>
-     * @param backupPath
-     *            the backup path.
+     *
+     * @param backupPath the backup path.
      * @return the File
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private static File makeBackupDir(String backupPath) throws IOException {
 
@@ -457,8 +419,8 @@ public class FileUtilsEx extends FileUtils {
 
     /**
      * 是否為可接受的ZIP檔(.CMS or .ZIP).
-     * @param sFileType
-     *            the s file type.
+     *
+     * @param sFileType the s file type.
      * @return true, if is zip file type
      */
     public static boolean isZipFileType(String sFileType) {
@@ -469,29 +431,6 @@ public class FileUtilsEx extends FileUtils {
         }
 
         return StringUtils.equalsIgnoreCase(sFileType, "ZIP") || StringUtils.equalsIgnoreCase(sFileType, "CMS");
-    }
-
-    /**
-     * ZIP檔案格式檢核.
-     * 不寫在isValidFileType內，因為isValidFileType為國外信用狀檢核圖檔(JPG,GIF...)與word，pdf專用，若加入ZIP格式可能會造成交易錯誤.
-     * @param bFileContent
-     *            the b file content.
-     * @param sFileType
-     *            the s file type.
-     * @return true, if is valid zip file type
-     */
-    public static boolean isValidZipFileType(byte[] bFileContent, String sFileType) {
-        // 檔案內容為空不檢核
-        if (bFileContent == null || bFileContent.length == 0) {
-            return false;
-        }
-
-        if (isZipFileType(sFileType)) {
-            String sFileContentHex = ConvertUtilsEx.byteArray2HexString(bFileContent).toUpperCase();
-            return sFileContentHex.startsWith("504B0304");
-        }
-
-        return false;
     }
 
 }

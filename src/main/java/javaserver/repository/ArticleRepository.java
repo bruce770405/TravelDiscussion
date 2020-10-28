@@ -11,7 +11,7 @@ import java.util.List;
  * article 的 dao
  */
 @Repository
-public interface ArticleJpaRepository extends JpaRepository<ArticleEntity, Long> {
+public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 
     List<ArticleEntity> findByUsername(String username);
 

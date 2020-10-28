@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -33,27 +35,25 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 public class ServiceLog {
 
-	private Logger log = Logger.getLogger(this.getClass());
-	
-//	@Pointcut("@annotation(com.bruce.aop.SystemLog)")
-	@Pointcut("execution(public * com.javaserver..*.*(..))")
-	public void service() {
-	}
-	
-	@Before("service()")  //before(pointcut)
-	public void beforeExecute(JoinPoint joinPoint){
+    private final static Logger LOGGER = Logger.getLogger(ServiceLog.class);
+
+    @Pointcut("execution( * javaserver.*.*(..))")
+    public void service() {
+    }
+
+    @Before("service()")
+    public void beforeExecute(JoinPoint joinPoint) {
         String classname = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
         List<Object> args = Arrays.asList(joinPoint.getArgs());
-        log.info("before Execute! --class name: " + classname + ", method name: " + methodName + " " + args );
+        LOGGER.info("before Execute! --class name: " + classname + ", method name: " + methodName + " " + args);
     }
-	
-	@After("service()")
-	public void callServiceLog() {
-		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+    @After("service()")
+    public void callServiceLog() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-		log.info("URL : " + request.getRequestURL().toString());
-		
-	}
-	
+        LOGGER.info("URL : " + request.getRequestURL().toString());
+    }
+
 }

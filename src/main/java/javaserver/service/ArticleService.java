@@ -1,10 +1,7 @@
 package javaserver.service;
 
-import javaserver.controller.NewArticle;
 import javaserver.entity.ArticleDetailEntity;
 import javaserver.entity.ArticleEntity;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
@@ -12,8 +9,6 @@ import org.springframework.http.ResponseEntity;
  * @author BruceHsu
  */
 public interface ArticleService {
-
-    static Logger logger = LogManager.getLogger(ArticleService.class);
 
     ArticleBo saveNewArticle(ArticleBo articleBo);
 

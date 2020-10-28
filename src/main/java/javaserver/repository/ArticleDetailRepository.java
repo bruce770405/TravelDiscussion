@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ArticleDetailJpaRepository extends JpaRepository<ArticleDetailEntity, ArticleMultiKey> {
+public interface ArticleDetailRepository extends JpaRepository<ArticleDetailEntity, ArticleMultiKey> {
 
     List<ArticleDetailEntity> findAllById(Long id);
 

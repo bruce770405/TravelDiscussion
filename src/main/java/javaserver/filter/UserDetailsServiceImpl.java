@@ -1,8 +1,9 @@
 package javaserver.filter;
 
 import javaserver.entity.LoginEntity;
-import javaserver.repository.UserJpaRepository;
+import javaserver.repository.UserRepository;
 import javaserver.util.AuthUserFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,12 +11,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-@Service
+@Service("UserDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-   private final UserJpaRepository repository;
+    private final UserRepository repository;
 
-    public UserDetailsServiceImpl(UserJpaRepository repository) {
+    @Autowired
+    public UserDetailsServiceImpl(UserRepository repository) {
         this.repository = repository;
     }
 
