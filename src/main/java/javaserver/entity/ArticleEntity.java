@@ -1,7 +1,7 @@
 package javaserver.entity;
 
 
-import javaserver.service.ArticleBo;
+import javaserver.service.bo.ArticleBo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

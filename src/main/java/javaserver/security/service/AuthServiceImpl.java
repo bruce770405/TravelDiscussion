@@ -1,17 +1,19 @@
-package javaserver.security.controller;
+package javaserver.security.service;
 
-import javaserver.entity.LoginEntity;
+import javaserver.entity.UserEntity;
 import javaserver.error.RestfulException;
 import javaserver.error.errorcode.AuthErrorCode;
 import javaserver.repository.UserRepository;
 import javaserver.security.AuthUser;
-import javaserver.security.JwtAuthenticationResponse;
+import javaserver.security.UserRegisterRequest;
+import javaserver.security.dto.JwtAuthenticationResponse;
 import javaserver.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,10 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Date;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -51,17 +52,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<?> register(LoginEntity userToAdd) {
-        final String username = userToAdd.getUsername();
-        final String nickname = userToAdd.getNickname();
+    public ResponseEntity<?> register(UserRegisterRequest registerRequest) {
+        final String username = registerRequest.getUsername();
+        final String nickname = registerRequest.getNickname();
         // 先檢查nickname,
-        LoginEntity login = userRepository.findByUsernameOrNickName(username, nickname);
-        if (!Objects.isNull(login)) {
+        Optional<UserEntity> optional = userRepository.findByUsernameOrNickName(username, nickname);
+        if (!optional.isPresent()) {
             throw new RestfulException(AuthErrorCode.ACCOUNT_HAS_EXISTED);
         }
 
-        userToAdd = prepareRegisterUser(userToAdd);
-        LoginEntity returnLogin = userRepository.save(userToAdd);
+        UserEntity returnLogin = userRepository.save(prepareRegisterUser(registerRequest));
         returnLogin.setPassword(null);
         return ResponseEntity.ok(returnLogin);
     }
@@ -80,28 +80,34 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<?> refresh(String oldToken) {
+    public JwtAuthenticationResponse refresh(String oldToken) {
         final String token = oldToken.substring(tokenHead.length());
         final String username = jwtUtil.getUsernameFromToken(token);
         AuthUser user = (AuthUser) userDetailsService.loadUserByUsername(username);
 
         if (!jwtUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
-            return ResponseEntity.badRequest().build();
+            throw new AuthenticationServiceException("token is incorrect");
         }
-        return ResponseEntity.ok(jwtUtil.refreshToken(token));
+
+        return new JwtAuthenticationResponse(jwtUtil.refreshToken(token));
     }
 
-    private LoginEntity prepareRegisterUser(LoginEntity userToAdd) {
-        final String rawPassword = userToAdd.getPassword();
-        userToAdd.setPassword(encoder.encode(rawPassword));
-        userToAdd.setLastPasswordResetDate(new Date());
-        userToAdd.setRoles("ROLE_USER");
-        userToAdd.setStopTag((short) 0);
-        userToAdd.setLevelId(1);
-        if (!StringUtils.isEmpty(userToAdd.getIcon())) {
-//            jwtUtil.base64ToImageFile(userToAdd.getUsername(), userToAdd.getIcon());
+    private UserEntity prepareRegisterUser(UserRegisterRequest registerRequest) {
+        UserEntity userEntity = new UserEntity();
+        final String rawPassword = registerRequest.getPassword();
+        userEntity.setPassword(encoder.encode(rawPassword));
+        userEntity.setLastPasswordResetDate(new Date());
+        userEntity.setRoles("ROLE_USER");
+        userEntity.setStopTag((short) 0);
+        userEntity.setLevelId(1);
+        userEntity.setNickname(registerRequest.getNickname());
+        userEntity.setUsername(registerRequest.getUsername());
+        userEntity.setMail(registerRequest.getMail());
+        if (registerRequest.getIcon() != null) {
+            userEntity.setIcon(registerRequest.getIcon().getBody());
+            userEntity.setFileName(registerRequest.getIcon().getFileName());
         }
-        return userToAdd;
+        return userEntity;
     }
 
 }

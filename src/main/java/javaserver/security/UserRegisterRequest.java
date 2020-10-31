@@ -1,28 +1,33 @@
 package javaserver.security;
 
-import javaserver.entity.LoginEntity;
+import javaserver.controller.dto.FileUploadDto;
+import javaserver.entity.UserEntity;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 
 @Data
 public class UserRegisterRequest {
-    private Long Id;
     private String nickname;
     private String username;
     private String password;
     private String mail;
-    private Date lastPasswordResetDate;
     private String roles;
-    private Short stopTag;
     private String gender;
     private Integer levelId;
-    private String icon;
+    private FileUploadDto icon;
 
-    public LoginEntity convertToEntity() {
-        LoginEntity loginEntity = new LoginEntity();
-        BeanUtils.copyProperties(this, loginEntity);
-        return loginEntity;
+    public UserEntity convertToEntity() {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setPassword(password);
+        userEntity.setGender(gender);
+        userEntity.setIcon(icon.getBody());
+        userEntity.setFileName(icon.getFileName());
+        userEntity.setLastPasswordResetDate(new Date());
+        userEntity.setMail(mail);
+        userEntity.setNickname(nickname);
+        userEntity.setUsername(username);
+        userEntity.setStopTag((short) 0);
+        return userEntity;
     }
 }

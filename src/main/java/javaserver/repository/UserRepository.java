@@ -1,16 +1,18 @@
 package javaserver.repository;
 
-import javaserver.entity.LoginEntity;
+import javaserver.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends JpaRepository<LoginEntity, Long> {
+import java.util.Optional;
 
-    LoginEntity findByUsername(String username);
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+    Optional<UserEntity> findByUsername(String username);
 
     //	@Query(value = "select name,author,price from login b where b.name like %:name%")
-    LoginEntity findByUsernameOrNickName(String username, String nickname);
+    Optional<UserEntity> findByUsernameOrNickName(String username, String nickname);
 
-    LoginEntity findByNickname(String nickname);
+    UserEntity findByNickname(String nickname);
 }

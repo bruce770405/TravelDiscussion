@@ -1,4 +1,4 @@
-package javaserver.security;
+package javaserver.security.dto;
 
 import lombok.Data;
 

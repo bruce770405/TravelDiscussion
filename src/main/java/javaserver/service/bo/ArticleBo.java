@@ -1,4 +1,4 @@
-package javaserver.service;
+package javaserver.service.bo;
 
 import javaserver.controller.dto.ArticleDto;
 import javaserver.entity.ArticleEntity;

@@ -1,16 +1,17 @@
 package javaserver.util;
 
-import javaserver.entity.LoginEntity;
+import javaserver.entity.UserEntity;
 import javaserver.security.AuthUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AuthUserFactory {
 
-    public static AuthUser create(LoginEntity l) {
+    public static AuthUser create(UserEntity l) {
         return new AuthUser(l.getId(),
                 l.getNickname(),
                 l.getUsername(),
@@ -20,10 +21,7 @@ public abstract class AuthUserFactory {
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(String authorities) {
-        List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority(authorities));
-        return list;
-//		return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return Stream.of(authorities).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
 }

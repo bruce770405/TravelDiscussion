@@ -1,6 +1,6 @@
 package javaserver.controller.dto;
 
-import javaserver.service.ArticleBo;
+import javaserver.service.bo.ArticleBo;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

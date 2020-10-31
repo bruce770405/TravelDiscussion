@@ -1,8 +1,9 @@
 package javaserver.security.controller;
 
-import javaserver.security.JwtAuthenticationRequest;
-import javaserver.security.JwtAuthenticationResponse;
+import javaserver.security.dto.JwtAuthenticationRequest;
+import javaserver.security.dto.JwtAuthenticationResponse;
 import javaserver.security.UserRegisterRequest;
+import javaserver.security.service.AuthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -27,8 +28,8 @@ public class AuthController {
     /**
      * 登入驗證
      */
-    @PostMapping
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authRequest) throws AuthenticationException {
+    @PostMapping(value = "/login")
+    public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authRequest) throws AuthenticationException {
         JwtAuthenticationResponse response = authService.login(authRequest.getUsername(), authRequest.getPassword());
         return ResponseEntity.ok(response);
     }
@@ -37,8 +38,9 @@ public class AuthController {
      * 刷新
      */
     @GetMapping(value = "/refresh")
-    public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) throws AuthenticationException {
-        return authService.refresh(request.getHeader(tokenHeader));
+    public ResponseEntity<JwtAuthenticationResponse> refreshAndGetAuthenticationToken(HttpServletRequest request) throws AuthenticationException {
+        JwtAuthenticationResponse response = authService.refresh(request.getHeader(tokenHeader));
+        return ResponseEntity.ok(response);
     }
 
 
@@ -47,7 +49,7 @@ public class AuthController {
      */
     @PostMapping(value = "/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequest request) throws AuthenticationException, IOException {
-        return authService.register(request.convertToEntity());
+        return authService.register(request);
     }
 
 

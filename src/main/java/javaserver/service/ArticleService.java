@@ -2,6 +2,7 @@ package javaserver.service;
 
 import javaserver.entity.ArticleDetailEntity;
 import javaserver.entity.ArticleEntity;
+import javaserver.service.bo.ArticleBo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 

@@ -2,14 +2,14 @@ package javaserver.service.impl;
 
 import javaserver.entity.ArticleDetailEntity;
 import javaserver.entity.ArticleEntity;
-import javaserver.entity.LoginEntity;
+import javaserver.entity.UserEntity;
 import javaserver.error.RestfulException;
 import javaserver.error.errorcode.ArticleErrorCode;
 import javaserver.repository.ArticleDetailRepository;
 import javaserver.repository.ArticleRepository;
 import javaserver.repository.UserRepository;
-import javaserver.service.ArticleBo;
 import javaserver.service.ArticleService;
+import javaserver.service.bo.ArticleBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service(value = "ArticleService")
 public class ArticleServiceImpl implements ArticleService {
@@ -63,14 +64,14 @@ public class ArticleServiceImpl implements ArticleService {
     public ResponseEntity<?> findArticlesByLevel(int levelId) {
         List<ArticleEntity> list = articleRepository.findByLevelId(levelId);
         // TODO Auto-generated method stub
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(list);
     }
 
     @Override
     public ResponseEntity<?> findAllArticle(Pageable page) {
         Page<ArticleEntity> pageable = articleRepository.findAll(page);
         // TODO Auto-generated method stub
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(pageable);
     }
 
     @Override
@@ -88,23 +89,21 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ResponseEntity<?> deleteArticleStepDetail(Long id, Long stepId, String username) {
         // 先判斷是否有刪除權限
-        LoginEntity user = userRepository.findByUsername(username);
-        if (Objects.isNull(user)) {
-            throw new RestfulException(ArticleErrorCode.ARTICLE_NOT_EXISTED);
-        } else {
-            ArticleDetailEntity articleDetailEntity = articleDetailRepository.findByIdAndStepId(id, stepId);
+        Optional<UserEntity> optional = userRepository.findByUsername(username);
+        UserEntity userEntity = optional.orElseThrow(() -> new RestfulException(ArticleErrorCode.ARTICLE_NOT_EXISTED));
 
-            // 不是管理者 or 版主 --> 繼續檢查是否為發文者
-            if (!user.getRoles().equals("ADMIN") && !user.getRoles().equals("BOARD_MANAGER")) {
-                if (!articleDetailEntity.getUsername().equals(username)) {
-                    // 發文者才可以自刪
-                    throw new RestfulException(ArticleErrorCode.ARTICLE_DELETE_FAIL_BECAUSE_DONT_HAVE_AUTH);
-                }
+        ArticleDetailEntity articleDetailEntity = articleDetailRepository.findByIdAndStepId(id, stepId);
+
+        // 不是管理者 or 版主 --> 繼續檢查是否為發文者
+        if (!userEntity.getRoles().equals("ADMIN") && !userEntity.getRoles().equals("BOARD_MANAGER")) {
+            if (!articleDetailEntity.getUsername().equals(username)) {
+                // 發文者才可以自刪
+                throw new RestfulException(ArticleErrorCode.ARTICLE_DELETE_FAIL_BECAUSE_DONT_HAVE_AUTH);
             }
-
-            articleDetailRepository.deleteByIdAndStepId(id, stepId);
-            return ResponseEntity.ok(null);
         }
+
+        articleDetailRepository.deleteByIdAndStepId(id, stepId);
+        return ResponseEntity.accepted().build();
     }
 
     @Override

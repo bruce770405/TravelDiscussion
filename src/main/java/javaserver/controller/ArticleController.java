@@ -4,7 +4,7 @@ import io.swagger.annotations.*;
 import javaserver.controller.dto.ArticleDto;
 import javaserver.entity.ArticleDetailEntity;
 import javaserver.entity.ArticleEntity;
-import javaserver.service.ArticleBo;
+import javaserver.service.bo.ArticleBo;
 import javaserver.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
